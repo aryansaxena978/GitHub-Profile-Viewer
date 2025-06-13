@@ -3,27 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub User Profile Viewer</title>
-  <link rel="stylesheet" href="style.css">
+  <title>GitHub Profile Explorer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="container">
-    <h1>GitHub Profile Viewer</h1>
+    <div class="header">
+      <h1>GitHub Profile Explorer</h1>
+      <p>Discover developers and their contributions</p>
+    </div>
+    
     <div class="search-box">
-      <input type="text" id="username" placeholder="Enter GitHub username" />
-      <button id="search-btn">Search</button>
+      <input type="text" class="search-input" id="username" placeholder="Enter GitHub username" />
+      <button class="search-btn" id="search-btn">
+        <i class="fas fa-search"></i> Search
+      </button>
     </div>
-    <div id="profile-container" class="hidden">
-      <img id="avatar" alt="User Avatar" />
-      <h2 id="name"></h2>
-      <p id="bio"></p>
-      <p><strong>Followers:</strong> <span id="followers"></span></p>
-      <p><strong>Following:</strong> <span id="following"></span></p>
-      <p><strong>Repositories:</strong> <span id="repos"></span></p>
-      <a id="profile-link" href="#" target="_blank">View GitHub Profile</a>
+    
+    <div class="loading" id="loading">
+      <i class="fas fa-spinner"></i> Loading profile...
     </div>
-    <div id="error-message" class="hidden"></div>
+    
+    <div class="error-message" id="error-message"></div>
+    
+    <div class="profile-container" id="profile-container">
+      <div class="profile-card">
+        <div class="profile-header">
+          <img class="avatar" id="avatar" alt="User Avatar" />
+          <div class="profile-info">
+            <h2 id="name"></h2>
+            <p id="login"></p>
+          </div>
+        </div>
+        
+        <div class="profile-bio">
+          <p id="bio"></p>
+        </div>
+        
+        <div class="profile-stats">
+          <div class="stat">
+            <span class="stat-value" id="followers"></span>
+            <span class="stat-label">Followers</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="following"></span>
+            <span class="stat-label">Following</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="repos"></span>
+            <span class="stat-label">Repos</span>
+          </div>
+        </div>
+        
+        <a class="profile-link" id="profile-link" href="#" target="_blank">
+          <i class="fas fa-external-link-alt"></i> View Full Profile
+        </a>
+      </div>
+    </div>
   </div>
-  <script src="script.js"></script>
+
+  <script src="/script.js">
+    
+  </script>
 </body>
 </html>
