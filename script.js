@@ -1,64 +1,73 @@
-// script.js
+document.addEventListener('DOMContentLoaded', () => {
+      // DOM Elements
+      const searchBtn = document.getElementById('search-btn');
+      const usernameInput = document.getElementById('username');
+      const profileContainer = document.getElementById('profile-container');
+      const errorMessage = document.getElementById('error-message');
+      const loading = document.getElementById('loading');
+      
+      // Profile Elements
+      const avatar = document.getElementById('avatar');
+      const name = document.getElementById('name');
+      const login = document.getElementById('login');
+      const bio = document.getElementById('bio');
+      const followers = document.getElementById('followers');
+      const following = document.getElementById('following');
+      const repos = document.getElementById('repos');
+      const profileLink = document.getElementById('profile-link');
 
-const searchButton = document.getElementById("search-btn");
-const usernameInput = document.getElementById("username");
-const profileContainer = document.getElementById("profile-container");
-const errorMessage = document.getElementById("error-message");
+      // Event Listeners
+      searchBtn.addEventListener('click', fetchProfile);
+      usernameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') fetchProfile();
+      });
 
-// Profile Fields
-const avatar = document.getElementById("avatar");
-const name = document.getElementById("name");
-const bio = document.getElementById("bio");
-const followers = document.getElementById("followers");
-const following = document.getElementById("following");
-const repos = document.getElementById("repos");
-const profileLink = document.getElementById("profile-link");
+      // Fetch GitHub Profile
+      async function fetchProfile() {
+        const username = usernameInput.value.trim();
+        if (!username) {
+          showError('Please enter a GitHub username');
+          return;
+        }
 
-// Fetch GitHub user data
-async function fetchGitHubProfile(username) {
-  const url = `https://api.github.com/users/${username}`;
-  try {
-    const response = await fetch(url);
+        // Show loading, hide others
+        loading.style.display = 'block';
+        profileContainer.style.display = 'none';
+        errorMessage.style.display = 'none';
 
-    if (!response.ok) {
-      throw new Error("User not found");
-    }
+        try {
+          const response = await fetch(`https://api.github.com/users/${username}`);
+          
+          if (!response.ok) {
+            throw new Error(response.status === 404 ? 'User not found' : 'Failed to fetch profile');
+          }
 
-    const data = await response.json();
-    displayProfile(data);
-  } catch (error) {
-    displayError(error.message);
-  }
-}
+          const data = await response.json();
+          displayProfile(data);
+        } catch (error) {
+          showError(error.message);
+        } finally {
+          loading.style.display = 'none';
+        }
+      }
 
-// Display profile data
-function displayProfile(data) {
-  // Show the profile container and hide error message
-  profileContainer.classList.remove("hidden");
-  errorMessage.classList.add("hidden");
+      // Display Profile
+      function displayProfile(data) {
+        avatar.src = data.avatar_url;
+        name.textContent = data.name || 'No name provided';
+        login.textContent = `@${data.login}`;
+        bio.textContent = data.bio || 'This user has no bio';
+        followers.textContent = data.followers.toLocaleString();
+        following.textContent = data.following.toLocaleString();
+        repos.textContent = data.public_repos.toLocaleString();
+        profileLink.href = data.html_url;
+        
+        profileContainer.style.display = 'block';
+      }
 
-  // Populate fields with data
-  avatar.src = data.avatar_url;
-  name.innerText = data.name || "No name provided";
-  bio.innerText = data.bio || "No bio available";
-  followers.innerText = data.followers;
-  following.innerText = data.following;
-  repos.innerText = data.public_repos;
-  profileLink.href = data.html_url;
-}
-
-// Display error message
-function displayError(message) {
-  // Show error message and hide profile container
-  errorMessage.innerText = message;
-  errorMessage.classList.remove("hidden");
-  profileContainer.classList.add("hidden");
-}
-
-// Handle search button click
-searchButton.addEventListener("click", () => {
-  const username = usernameInput.value.trim();
-  if (username) {
-    fetchGitHubProfile(username);
-  }
-});
+      // Show Error
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+    });
